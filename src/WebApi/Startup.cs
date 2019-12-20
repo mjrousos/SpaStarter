@@ -18,25 +18,31 @@ namespace WebApi
         private const string SwaggerAPIVersion = "v1";
         private const string SwaggerDocPath = "/swagger/v1/swagger.json";
 
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add MVC services
+            services.AddControllers();
+
+            // Add auth services, including JWT bearer scheme
             services.AddAuthentication(AzureADB2CDefaults.BearerAuthenticationScheme)
                 .AddAzureADB2CBearer(options => Configuration.Bind("AzureAdB2C", options));
-            services.AddControllers();
+
+            // Add response compression
             services.AddResponseCompression(options =>
             {
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
             });
+
+            // Add Swagger services
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc($"{SwaggerAPIVersion}", new OpenApiInfo { Title = SwaggerAPITitle, Version = SwaggerAPIVersion });
@@ -58,37 +64,55 @@ namespace WebApi
                     }
                 });
             });
+
+            // Add health check services
             services.AddHealthChecks();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Allow calls from the Vue dev server
+                app.UseCors(policy => policy
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://localhost:8080")
+                    .AllowCredentials());
             }
 
-            app.UseHttpsRedirection();
-
+            // app.UseHttpsRedirection();
             if (bool.TryParse(Configuration[EnableCompressionKeyName], out var useResponseCompression) && useResponseCompression)
             {
                 app.UseResponseCompression();
             }
 
+            // Serve static files (including the SPA app)
             app.UseStaticFiles();
+
+            // Serve Swagger and Swagger UI endpoints
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint(SwaggerDocPath, $"{SwaggerAPITitle} {SwaggerAPIVersion}");
             });
+
+            // Use endpoint routing with auth
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                // Route to MVC controllers
                 endpoints.MapControllers();
+
+                // Map to health check endpoints
                 endpoints.MapHealthChecks(HealthCheckPath);
+
+                // Defer to the SPA to route unrecognized paths
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }

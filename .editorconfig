@@ -6,12 +6,18 @@ root = true
 # Don't use tabs for indentation.
 [*]
 indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
-insert_final_newline = true
+charset = utf-8-bom
+
+# JavaScript and TypeScript source files
+[*.{js,jsx,ts,tsx,vue}]
+indent_size = 2
 charset = utf-8-bom
 
 # XML project files
@@ -208,3 +214,6 @@ csharp_preserve_single_line_statements = true
 
 # CA1819: Properties should not return arrays
 dotnet_diagnostic.CA1819.severity = none
+
+# CA1822: Member Get does not access instance data and can be marked as static (Shared in VisualBasic)
+dotnet_diagnostic.CA1822.severity = none

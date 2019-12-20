@@ -9,4 +9,24 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="3.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
   </ItemGroup>
+
+  <Target Name="CopyClientDist" BeforeTargets="Build">
+    <ItemGroup>
+      <DistFiles Include="$(ProjectDir)\..\WebClient\dist\**" />
+    </ItemGroup>
+    <RemoveDir Directories="wwwroot\dist" />
+    <MakeDir Directories="wwwroot\dist" />
+    <Copy SourceFiles="@(DistFiles)" DestinationFolder="wwwroot\dist\%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="PublishSpa" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <DistFilesToPublish Include="wwwroot\dist\**" />
+      <ResolvedFileToPublish Include="@(DistFilesToPublish->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFilesToPublish.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>    
+  </Target>
 </Project>

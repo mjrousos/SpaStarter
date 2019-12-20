@@ -5,6 +5,8 @@ namespace WebApi
 {
     public class Program
     {
+        private const string WebRoot = "wwwroot/dist";
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -14,6 +16,7 @@ namespace WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseWebRoot(WebRoot);
                     webBuilder.UseStartup<Startup>();
                 });
     }
