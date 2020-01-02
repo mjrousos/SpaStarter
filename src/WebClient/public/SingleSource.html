@@ -58,7 +58,7 @@
         </div>
         <nav class="nav fixed-bottom navbar-dark bg-dark px-1">
             <span class="navbar-text navbar-dark">
-                Copyright M.J. Rousos
+                &copy; {{currentYear}} M.J. Rousos
             </span>
         </nav>
     </div>
@@ -73,7 +73,8 @@
       const data = {
           title: 'Hello, world!',
           routePath: '',
-          count: 0
+          count: 0,
+          currentYear: new Date().getFullYear()
       }
       const app = new Vue({
           el: '#app',
