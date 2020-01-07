@@ -7,7 +7,7 @@
       <div class="card-title">
         {{ count }}
       </div>
-      <button class="btn btn-primary" v-on:click="incrementCount">
+      <button class="btn btn-primary" v-on:click="incrementCountAsync">
         Increment
       </button>
     </div>
@@ -27,7 +27,7 @@ export default {
     };
   },
   methods: {
-    incrementCount: incrementCountAsync
+    incrementCountAsync
   },
   props: {
     CounterTitle: String

@@ -40,8 +40,8 @@ export default {
   name: "signIn",
   data: () => data,
   methods: {
-    login: login,
-    logout: logout
+    login,
+    logout
   }
 };
 </script>
