@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!userName">
+    <div v-if="!signedIn">
       <button
         class="btn btn-outline-light"
         type="submit"
@@ -9,7 +9,7 @@
         Sign in
       </button>
     </div>
-    <div v-if="userName">
+    <div v-if="signedIn">
       <span class="navbar-text navbar-dark">Welcome, {{ userName }}</span>
       <button
         class="btn btn-outline-light"
@@ -23,25 +23,37 @@
 </template>
 
 <script>
-const data = {
-  // TODO!!!
-  userName: "Mike"
-};
+import Configuration from "../configuration";
+import AuthService from "../services/auth.service";
 
-function login() {
-  // TODO
+async function login() {
+  await AuthService.loginAsync(Configuration.authSettings.popup);
+  this.refreshUserInfo();
 }
 
 function logout() {
-  // TODO
+  AuthService.logout();
+  this.refreshUserInfo();
+}
+
+function refreshUserInfo() {
+  return this.$store.dispatch("refreshUser");
 }
 
 export default {
   name: "signIn",
-  data: () => data,
+  computed: {
+    signedIn() {
+      return this.$store.getters.user != null;
+    },
+    userName() {
+      return this.$store.getters.userName;
+    }
+  },
   methods: {
     login,
-    logout
+    logout,
+    refreshUserInfo
   }
 };
 </script>
