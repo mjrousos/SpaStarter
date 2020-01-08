@@ -27,9 +27,9 @@ class AuthService {
 
     this.msalApp.handleRedirectCallback((error, response) => {
       if (response) {
-        console.log("Logged on " + JSON.stringify(response));
+        // TODO
       } else if (error) {
-        console.error(error);
+        // TODO
       }
     });
   }
