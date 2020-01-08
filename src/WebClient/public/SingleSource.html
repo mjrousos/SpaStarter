@@ -7,6 +7,7 @@
     <link rel="icon" href="./favicon.ico">
     <title>Single Page Vue App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/toastr@2.1.4/build/toastr.min.css" crossorigin="anonymous">
     <style>
         .navbar-text {
             margin-right: 1rem;
@@ -62,6 +63,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row" v-if="userName">
+                  <button class="btn btn-outline-info" @click="getToken(false)">
+                    Get ID Token
+                  </button>
+                  <button class="btn btn-outline-info" @click="getToken(true)">
+                    Get Access Token
+                  </button>
+                </div>
             </div>
             <div v-if="routePath=='About'">
                 <h1>About</h1>
@@ -75,11 +84,12 @@
     </div>
   </body>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@2.6.11/dist/vue.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios@0.19.0/dist/axios.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/toastr@2.1.4/build/toastr.min.js" crossorigin="anonymous"></script>
   <script src="https://alcdn.msauth.net/lib/1.2.0/js/msal.min.js" crossorigin="anonymous"></script>
   <script>
       // https://azuread.github.io/microsoft-authentication-library-for-js/docs/msal/
@@ -102,40 +112,62 @@
             console.log('Logged on ' + JSON.stringify(response));
         } else if (error) {
             console.error(error);
-            // TODO (toast notification?)
         }
       });
 
+      toastr.options = {
+        closeButton: true,
+        positionClass: "toast-bottom-center"
+      };
+
       const data = {
-          title: 'Hello, world!',
-          routePath: '',
-          user: msalInstance.getAccount(),
-          count: 0,
-          currentYear: new Date().getFullYear()
+        title: 'Hello, world!',
+        routePath: '',
+        user: msalInstance.getAccount(),
+        count: 0,
+        currentYear: new Date().getFullYear()
       }
 
       const app = new Vue({
-          el: '#app',
-          data: data,
-          computed: {
-            userName: getUserName
-          },
-          methods: {
-              incrementCount: incrementCountAsync,
-              route: route,
-              login: login,
-              logout: logout
-          }
+        el: '#app',
+        data: data,
+        computed: {
+          userName: getUserName
+        },
+        methods: {
+            getToken: getTokenAsync,
+            incrementCount: incrementCountAsync,
+            route,
+            login,
+            logout
+        }
       });
 
       async function incrementCountAsync() {
         app.count++;
+      }
 
-        var idToken = await getIdToken();
-        console.log("Retrieved ID token: " + idToken);
-
-        var accessToken = await getAccessToken();
-        console.log("Retrieved access token: " + accessToken);
+      async function getTokenAsync(accessToken) {
+        var scopes = accessToken ?
+          [ "https://fcfauth.onmicrosoft.com/fcfverses/user_impersonation" ] :
+          [ "4334cd09-5089-4a5e-89ac-ff6ffcb3efef" ]; // Pass Client ID for ID token
+        const tokenRequest = { scopes };
+        try {
+          var tokenResponse = await msalInstance.acquireTokenSilent(tokenRequest);
+          var token = accessToken ?
+            tokenResponse.accessToken :
+            tokenResponse.idToken.rawIdToken;
+          toastr.info(token, "Token");
+        }
+        catch(error) {
+          if (error.name === "InteractionRequiredAuthError") {
+            msalInstance.acquireTokenRedirect(tokenRequest);
+          } else if (error.name === "ClientAuthError") {
+            login();
+          } else {
+            console.error(JSON.stringify(error));
+          }
+        }
       }
 
       function route(path) {
@@ -171,41 +203,6 @@
           } else {
               return null;
           }
-      }
-
-      async function getIdToken() {
-          const tokenRequest = {
-            // Pass client id as scope to get an ID token
-            scopes: [ "4334cd09-5089-4a5e-89ac-ff6ffcb3efef" ]
-        };
-        try {
-            var tokenResponse = await msalInstance.acquireTokenSilent(tokenRequest);
-            return tokenResponse.idToken.rawIdToken;
-        }
-        catch(error) {
-            if (error.name === "InteractionRequiredAuthError") {
-                msalInstance.acquireTokenRedirect(tokenRequest);
-            } else if (error.name === "ClientAuthError") {
-                login();
-            }
-        }
-      }
-
-      async function getAccessToken() {
-          const tokenRequest = {
-            scopes: [ "https://fcfauth.onmicrosoft.com/fcfverses/user_impersonation" ]
-        };
-        try {
-            var tokenResponse = await msalInstance.acquireTokenSilent(tokenRequest);
-            return tokenResponse.accessToken;
-        }
-        catch(error) {
-            if (error.name === "InteractionRequiredAuthError") {
-                msalInstance.acquireTokenRedirect(tokenRequest);
-            } else if (error.name === "ClientAuthError") {
-                login();
-            }
-        }
       }
   </script>
 </html>
