@@ -10,9 +10,14 @@ To help with that, I intend this repo to be a simple SPA 'starter' app that I ca
 
 * **Vue.js** for the frontend framework
 * **Vue-router** for routing
+* **Axios** for HTTP calls to the backend (or other RESTful services)
 * Two backend options:
   * **Dockerized ASP.NET Core** (including **Kubernetes** manifest and **Swagger** endpoint)
   * **Azure Functions**
 * **Bootstrap 4** styling
-* **AAD B2C auth**
-* **Webpack** for packaging and minification
+* **AAD B2C auth** with MSAL for client interactions and a JWT bearer token scheme on the backend
+* **Vue CLI's auto-webpack** for packaging and minification
+
+## Build and Run
+
+Instructions coming soon.
