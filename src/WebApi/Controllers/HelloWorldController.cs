@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         public string Get() => "Hello, world!";
 
         [Authorize]
-        [HttpGet("secure")]
+        [HttpGet("Secure")]
         public string GetAuthorized() => $"Hello, authorized user!\n{JsonSerializer.Serialize(HttpContext.User.Claims.ToDictionary(c => c.Type, c => c.Value))}";
     }
 }

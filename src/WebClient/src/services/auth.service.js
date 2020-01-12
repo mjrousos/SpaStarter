@@ -108,7 +108,7 @@ class AuthService {
 
   async getAccessTokenAsync(scopes, popup) {
     if (!scopes && Configuration.authSettings.appIdUri) {
-      scopes = [Configuration.authSettings.appIdUri + "/user_impersonation"];
+      scopes = [`${Configuration.authSettings.appIdUri}/user_impersonation`];
     }
     const tokenRequest = {
       scopes

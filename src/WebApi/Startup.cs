@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace WebApi
@@ -73,6 +74,9 @@ namespace WebApi
         {
             if (env.IsDevelopment())
             {
+                // https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
+                IdentityModelEventSource.ShowPII = true;
+
                 app.UseDeveloperExceptionPage();
 
                 // Allow calls from the Vue dev server
