@@ -20,6 +20,10 @@ charset = utf-8-bom
 indent_size = 2
 charset = utf-8-bom
 
+[*.{html,html}]
+indent_size = 2
+charset = utf-8-bom
+
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 2

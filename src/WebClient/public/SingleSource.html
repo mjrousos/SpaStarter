@@ -6,234 +6,256 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="./favicon.ico">
     <title>Single Page Vue App</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/toastr@2.1.4/build/toastr.min.css" crossorigin="anonymous">
     <style>
-        .navbar-text {
-            margin-right: 1rem;
-        }
+      .navbar-text {
+        margin-right: 1rem;
+      }
     </style>
   </head>
+
   <body>
     <noscript>
-      <strong>We're sorry but this site doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but this site doesn't work properly without JavaScript enabled. Please enable it to
+        continue.</strong>
     </noscript>
     <div id="app">
-        <!-- https://getbootstrap.com/docs/4.4/components/navbar/ -->
-        <header class="nav navbar-expand-sm navbar-dark bg-dark p-2">
-            <a class="navbar-brand" v-on:click="route('')" href="#">Sample App</a>
-            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item" v-bind:class="{active: routePath==''}">
-                        <a class="nav-link" v-on:click="route('')" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item" v-bind:class="{active: routePath=='About'}">
-                        <a class="nav-link" v-on:click.prevent="route('About')" href="#">About</a>
-                    </li>
-                </ul>
-                <div class="ml-auto" v-if="!userName">
-                    <button class="btn btn-outline-light" type="submit" v-on:click.prevent="login">Sign in</button>
-                </div>
-                <div class="ml-auto" v-if="userName">
-                    <span class="navbar-text navbar-dark">
-                        Welcome, {{userName}}
-                    </span>
-                    <button class="btn btn-outline-light" type="submit" v-on:click.prevent="logout">Sign out</button>
-                </div>
-            </div>
-        </header>
-        <div class="container-fluid my-2">
-            <div v-if="routePath==''">
-                <h1>{{title}}</h1>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="card card-default">
-                            <div class="card-header">
-                                Count
-                            </div>
-                            <div class="card-body">
-                                <div class="card-title">
-                                    {{count}}
-                                </div>
-                                <button class="btn btn-primary" v-on:click="incrementCount">Increment</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                  <div class="col-12 my-2">
-                    <button class="btn btn-outline-info" @click="callApi(false)">
-                      Call Anonymous API
-                    </button>
-                    <button class="btn btn-outline-info" @click="callApi(true)">
-                      Call Authenticated API
-                    </button>
-                  </div>
-                </div>
-            </div>
-            <div v-if="routePath=='About'">
-                <h1>About</h1>
-            </div>
-        </div>
-        <nav class="nav fixed-bottom navbar-dark bg-dark px-1">
+      <!-- https://getbootstrap.com/docs/4.4/components/navbar/ -->
+      <header class="nav navbar-expand-sm navbar-dark bg-dark p-2">
+        <a class="navbar-brand" v-on:click="route('')" href="#">Sample App</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item" v-bind:class="{active: routePath==''}">
+              <a class="nav-link" v-on:click="route('')" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" v-bind:class="{active: routePath=='About'}">
+              <a class="nav-link" v-on:click.prevent="route('About')" href="#">About</a>
+            </li>
+          </ul>
+          <div class="ml-auto" v-if="!userName">
+            <button class="btn btn-outline-light" type="submit" v-on:click.prevent="login">Sign in</button>
+          </div>
+          <div class="ml-auto" v-if="userName">
             <span class="navbar-text navbar-dark">
-                &copy; {{currentYear}} M.J. Rousos
+              Welcome, {{userName}}
             </span>
-        </nav>
+            <button class="btn btn-outline-light" type="submit" v-on:click.prevent="logout">Sign out</button>
+          </div>
+        </div>
+      </header>
+      <div class="container-fluid my-2">
+        <div v-if="routePath==''">
+          <h1>{{title}}</h1>
+          <div class="row">
+            <div class="col-6">
+              <div class="card card-default">
+                <div class="card-header">
+                  Count
+                </div>
+                <div class="card-body">
+                  <div class="card-title">
+                    {{count}}
+                  </div>
+                  <button class="btn btn-primary" v-on:click="incrementCount">Increment</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 my-2">
+              <button class="btn btn-outline-info" @click="callApi(false)">
+                Call Anonymous API
+              </button>
+              <button class="btn btn-outline-info" @click="callApi(true)">
+                Call Authenticated API
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="routePath=='About'">
+          <h1>About</h1>
+        </div>
+      </div>
+      <nav class="nav fixed-bottom navbar-dark bg-dark px-1">
+        <span class="navbar-text navbar-dark">
+          &copy; {{currentYear}} M.J. Rousos
+        </span>
+      </nav>
     </div>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@2.6.11/dist/vue.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios@0.19.0/dist/axios.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/toastr@2.1.4/build/toastr.min.js" crossorigin="anonymous"></script>
   <script src="https://alcdn.msauth.net/lib/1.2.0/js/msal.min.js" crossorigin="anonymous"></script>
   <script>
-      const hostUrl = "";
+    ///// MSAL Initialization
 
-      // https://azuread.github.io/microsoft-authentication-library-for-js/docs/msal/
-      // https://docs.microsoft.com/azure/active-directory/develop/msal-js-initializing-client-applications
-      const msalInstance = new Msal.UserAgentApplication({
-        auth: {
-              clientId: 'GuidId',
-              authority: "https://domain.b2clogin.com/domain.onmicrosoft.com/B2C_1_signup_signin",
-              redirectUri: 'http://localhost:8080/SingleSource.html',
-              postLogoutRedirectUri: "http://localhost:8080/SingleSource.html",
-              validateAuthority: false // False for B2C
-            },
-            cache: {
-                cacheLocation: "localStorage"
-            }
-        });
+    // https://azuread.github.io/microsoft-authentication-library-for-js/docs/msal/
+    // https://docs.microsoft.com/azure/active-directory/develop/msal-js-initializing-client-applications
+    const msalInstance = new Msal.UserAgentApplication({
+      auth: {
+        clientId: "",
+        authority: "",
+        redirectUri: 'http://localhost:8080/SingleSource.html',
+        postLogoutRedirectUri: "http://localhost:8080/SingleSource.html",
+        validateAuthority: false // False for B2C
+      },
+      cache: {
+        cacheLocation: "localStorage"
+      }
+    });
 
-      msalInstance.handleRedirectCallback((error, response) => {
-        if (response) {
-            console.log('Logged on ' + JSON.stringify(response));
-        } else if (error) {
-            console.error(error);
-        }
+    msalInstance.handleRedirectCallback((error, response) => {
+      if (response) {
+        console.log('Logged on ' + JSON.stringify(response));
+      } else if (error) {
+        console.error(error);
+      }
+    });
+
+    // Since logging in or out triggers a redirect, the auth token can be
+    // set on page-load and won't change while on the page.
+    // Don't set the header if there's a hash in our URL since that probably
+    // indicates a redirect after logging in or out via a hidden iframe and
+    // MSAL doesn't allow retrieving tokens in that state (and it's unnecessary
+    // for that scenario).
+    if (!window.location.hash && msalInstance.getAccount()) {
+      getTokenAsync(true, true).then(token => {
+        // If a user is signed in and an access token is available,
+        // set the HTTP header and show the signed in user.
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        data.user = msalInstance.getAccount();
       });
+    }
 
-      toastr.options = {
-        closeButton: true,
-        positionClass: "toast-bottom-center"
+    ///// MSAL/Auth functions
+
+    function login() {
+      const loginRequest = {
+        scopes: ["openid", "offline_access", "profile"]
+        // Scopes can be specified to 'pre-approve' scopes that may be needed for future access tokens
+        // scopes: [ "https://graph.microsoft.com/User.ReadWrite" ]
       };
+      msalInstance.loginRedirect(loginRequest);
+    }
 
-      const data = {
-        title: 'Hello, world!',
-        routePath: '',
-        user: msalInstance.getAccount(),
-        count: 0,
-        currentYear: new Date().getFullYear()
-      }
+    function logout() {
+      msalInstance.logout();
+    }
 
-      // Since logging in or out triggers a redirect, the auth token can be
-      // set on page-load and won't change while on the page.
-      // Don't set the header if there's a hash in our URL since that probably
-      // indicates a redirect after logging in or out via a hidden iframe and
-      // MSAL doesn't allow retrieving tokens in that state (and it's unnecessary
-      // for that scenario).
-      if (!this.location.hash && msalInstance.getAccount()) {
-        getTokenAsync(true).then(token => {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        });
-      }
-
-      const app = new Vue({
-        el: '#app',
-        data: data,
-        computed: {
-          userName: getUserName
-        },
-        methods: {
-            callApi: callApiAsync,
-            incrementCount: incrementCountAsync,
-            route,
-            login,
-            logout
+    function getUserName() {
+      if (data.user) {
+        if (data.user.userName) {
+          return data.user.userName;
+        } else if (data.user.name) {
+          return data.user.name;
+        } else if (data.user.idToken && data.user.idToken.given_name) {
+          return data.user.idToken.given_name;
+        } else if (data.user.idToken && data.user.idToken.emails && data.user.idToken.emails.length > 0) {
+          return data.user.idToken.emails[0];
+        } else {
+          return data.user.idToken.sub;
         }
-      });
-
-      async function incrementCountAsync() {
-        app.count++;
+      } else {
+        return null;
       }
+    }
 
-      async function callApiAsync(authenticatedEndpoint) {
-        var endpoint = hostUrl + (authenticatedEndpoint ? "/HelloWorld/Secure" : "/HelloWorld");
-        try {
-          var response = await axios.get(endpoint);
-          if (response.status / 100 == 2) {
-            toastr.info(response.data, "Message from API");
-          } else {
-            toastr.error(`Response from ${endpoint}: ${response.status} ${response.statusText} ${JSON.stringify(response.data)}`)
-          }
+    async function getTokenAsync(accessToken, suppressRedirect) {
+      var scopes = accessToken ?
+        ["<App URI Path>/user_impersonation"] :
+        ["<Client Id>"]; // Pass Client ID for ID token
+      const tokenRequest = { scopes };
+      try {
+        var tokenResponse = await msalInstance.acquireTokenSilent(tokenRequest);
+        var token = accessToken ?
+          tokenResponse.accessToken :
+          tokenResponse.idToken.rawIdToken;
+        return token;
+      }
+      catch (error) {
+        if (suppressRedirect) {
+          return null;
         }
-        catch(error) {
-          toastr.error(`Error calling API: ${JSON.stringify(error.message)}`);
+        if (error.name === "InteractionRequiredAuthError") {
+          msalInstance.acquireTokenRedirect(tokenRequest);
+        } else if (error.name === "ClientAuthError") {
+          login();
+        } else {
+          console.error(JSON.stringify(error));
         }
       }
+    }
 
-      async function getTokenAsync(accessToken) {
-        var scopes = accessToken ?
-          [ "https://fcfauth.onmicrosoft.com/fcfverses/user_impersonation" ] :
-          [ "4334cd09-5089-4a5e-89ac-ff6ffcb3efef" ]; // Pass Client ID for ID token
-        const tokenRequest = { scopes };
-        try {
-          var tokenResponse = await msalInstance.acquireTokenSilent(tokenRequest);
-          var token = accessToken ?
-            tokenResponse.accessToken :
-            tokenResponse.idToken.rawIdToken;
-          return token;
+
+    ///// Toastr options
+    toastr.options = {
+      closeButton: true,
+      positionClass: "toast-bottom-center"
+    };
+
+
+    ///// Axios/HTTP initalization and functions
+    const hostUrl = "";
+
+    async function callApiAsync(authenticatedEndpoint) {
+      var endpoint = hostUrl + (authenticatedEndpoint ? "/HelloWorld/Secure" : "/HelloWorld");
+      try {
+        var response = await axios.get(endpoint);
+        if (response.status / 100 == 2) {
+          toastr.info(response.data, "Message from API");
+        } else {
+          toastr.error(`Response from ${endpoint}: ${response.status} ${response.statusText} ${JSON.stringify(response.data)}`)
         }
-        catch(error) {
-          if (error.name === "InteractionRequiredAuthError") {
-            msalInstance.acquireTokenRedirect(tokenRequest);
-          } else if (error.name === "ClientAuthError") {
-            login();
-          } else {
-            console.error(JSON.stringify(error));
-          }
-        }
       }
+      catch (error) {
+        toastr.error(`Error calling API: ${JSON.stringify(error.message)}`);
+      }
+    }
 
-      function route(path) {
-          app.routePath = path;
-      }
 
-      function login() {
-        const loginRequest = {
-            scopes: ["openid", "offline_access", "profile"]
-            // Scopes can be specified to 'pre-approve' scopes that may be needed for future access tokens
-            // scopes: [ "https://graph.microsoft.com/User.ReadWrite" ]
-        };
-        msalInstance.loginRedirect(loginRequest);
-      }
+    ///// Vue component setup
+    const data = {
+      title: 'Hello, world!',
+      routePath: '',
+      user: null,
+      count: 0,
+      currentYear: new Date().getFullYear()
+    }
 
-      function logout() {
-          msalInstance.logout();
+    const app = new Vue({
+      el: '#app',
+      data: data,
+      computed: {
+        userName: getUserName
+      },
+      methods: {
+        callApi: callApiAsync,
+        incrementCount: incrementCountAsync,
+        route,
+        login,
+        logout
       }
+    });
 
-      function getUserName() {
-          if (data.user) {
-              if (data.user.userName) {
-                return data.user.userName;
-              } else if (data.user.name) {
-                return data.user.name;
-              } else if (data.user.idToken && data.user.idToken.given_name) {
-                return data.user.idToken.given_name;
-              } else if (data.user.idToken && data.user.idToken.emails && data.user.idToken.emails.length > 0) {
-                return data.user.idToken.emails[0];
-              } else {
-                return data.user.idToken.sub;
-              }
-          } else {
-              return null;
-          }
-      }
+    async function incrementCountAsync() {
+      app.count++;
+    }
+
+    function route(path) {
+      app.routePath = path;
+    }
   </script>
 </html>
