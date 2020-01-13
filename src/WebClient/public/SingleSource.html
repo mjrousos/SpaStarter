@@ -73,7 +73,7 @@
                 Call Anonymous API
               </button>
               <button class="btn btn-outline-info" @click="callApi(true)">
-                Call Authenticated API
+                Call Authorized API
               </button>
             </div>
           </div>
@@ -211,7 +211,7 @@
     const hostUrl = "";
 
     async function callApiAsync(authenticatedEndpoint) {
-      var endpoint = hostUrl + (authenticatedEndpoint ? "/HelloWorld/Secure" : "/HelloWorld");
+      var endpoint = `${hostUrl}${(authenticatedEndpoint ? "/HelloWorld/Secure" : "/HelloWorld")}`;
       try {
         var response = await axios.get(endpoint);
         if (response.status / 100 == 2) {

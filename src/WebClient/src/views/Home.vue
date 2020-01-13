@@ -8,13 +8,15 @@
           <Counter CounterTitle="A second counter" />
         </div>
       </div>
-      <div class="row" v-if="signedIn">
-        <button class="btn btn-outline-info" @click="getToken(false)">
-          Get ID Token
-        </button>
-        <button class="btn btn-outline-info" @click="getToken(true)">
-          Get Access Token
-        </button>
+      <div class="row">
+        <div class="col-12 my-2">
+          <button class="btn btn-outline-info mr-2" @click="callApi(false)">
+            Call Anonymous API
+          </button>
+          <button class="btn btn-outline-info" @click="callApi(true)">
+            Call Authorized API
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -23,8 +25,11 @@
 <script>
 // @ is an alias to /src
 import Counter from "@/components/Counter.vue";
-import AuthService from "../services/auth.service";
+import Configuration from "../configuration";
+import WebApiService from "../services/webApi.service";
 import * as toastr from "toastr";
+
+var apiClient = new WebApiService(Configuration.webApiUrl);
 
 toastr.options = {
   closeButton: true,
@@ -42,12 +47,15 @@ export default {
     Counter
   },
   methods: {
-    getToken: async function(accessToken) {
-      var token = accessToken
-        ? await AuthService.getAccessTokenAsync()
-        : await AuthService.getIdTokenAsync();
-
-      toastr.info(token, "Token");
+    callApi: async function(authorizedEndpoint) {
+      var response = authorizedEndpoint
+        ? await apiClient.authorizedApi()
+        : await apiClient.anonymousApi();
+      if (response) {
+        toastr.info(response, "Message from web API");
+      } else {
+        toastr.error("Error calling web API");
+      }
     }
   },
   computed: {
