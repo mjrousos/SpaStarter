@@ -5,7 +5,6 @@
       <div class="row">
         <div class="col-6">
           <Counter CounterTitle="Counter" />
-          <Counter CounterTitle="A second counter" />
         </div>
       </div>
       <div class="row">
