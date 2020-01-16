@@ -83,7 +83,7 @@ namespace WebApi
                 app.UseCors(policy => policy
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .WithOrigins("http://localhost:8080")
+                    .WithOrigins("http://localhost:8080", "http://localhost:5000", "https://localhost:5001")
                     .AllowCredentials());
             }
 
